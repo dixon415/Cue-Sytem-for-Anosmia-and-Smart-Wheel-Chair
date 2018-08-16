@@ -131,6 +131,7 @@ void loop() {
   XValue = analogRead(XAxis);
   YValue = analogRead (YAxis);
   detectFall (XValue, YValue);
+  digitalWrite(collisionLED, LOW);
   
   measDistanceF = calculateDistance(trigPinF, echoPinF);
   /*For Debugging purpose*/
@@ -179,6 +180,7 @@ void detectFall (int X, int Y){
     fallCount = fallCount + 1;
     Serial.print("Fall Detected! C: ");
     Serial.println(fallCount);
+    digitalWrite(collisionLED, HIGH);
     delay(1000);
 
     if(fallCount >= 10){
