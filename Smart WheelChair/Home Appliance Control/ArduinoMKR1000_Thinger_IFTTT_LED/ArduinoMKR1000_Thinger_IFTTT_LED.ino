@@ -6,7 +6,7 @@
  * Project: Cue system for Anosmia and Smart WheelChair
  * Website: 
  *
- * Blog Link - 
+ * Blog Link - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/31/cue-system-for-anosmia-and-smart-wheelchair-6-home-appliance-control
  * 
  * Design Challenge Page -
  * https://www.element14.com/community/community/design-challenges/designforacause/blog
@@ -29,11 +29,15 @@ Create a new device and replace deviceId, deviceCredential below with the one yo
 ThingerWifi101 thing(SECRET_USERNAME, SECRET_DEVICEID, SECRET_DEVICECREDENTIAL);
 
 void setup() {
-  /*Replace the below accrodingly with your WiFi SSID and password*/
   pinMode(LED_BUILTIN, OUTPUT);
+    
+  /*Serial initialisation*/
+  Serial.begin(38400);
   
+  /*Replace the below accrodingly with your WiFi SSID and password*/
   thing.add_wifi(SECRET_SSID, SECRET_PASS);
 
+  /*The relay state is obtained as an input resource (integer/ number) from thinger.io*/
   thing["Test"] << [](pson& in){
       relayState = in["state"];
       changeRelayState();
