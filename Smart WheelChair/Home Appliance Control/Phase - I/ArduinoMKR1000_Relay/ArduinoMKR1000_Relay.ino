@@ -24,7 +24,7 @@
  *      RX          |         RX     
  *      TX          |         TX
  * 
- * Blog Link -
+ * Blog Link - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/31/cue-system-for-anosmia-and-smart-wheelchair-6-home-appliance-control
  * 
  */
  
@@ -42,4 +42,3 @@ void passCmdCode (int code){
   Serial1.print(code);
   delay(1000);
 }
-
