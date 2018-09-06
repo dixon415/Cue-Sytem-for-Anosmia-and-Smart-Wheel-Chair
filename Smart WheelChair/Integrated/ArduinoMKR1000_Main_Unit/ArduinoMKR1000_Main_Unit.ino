@@ -7,7 +7,7 @@
  * This code contains extracts from the WiFi101 WebClient example code, 'created 13 July 2010 by dlf (Metodo2 srl) modified 31 May 2012 by Tom Igoe'
  * 
  * Author : Dixon Selvan
- * Date   : August 31, 2018
+ * Date   : Sep 06, 2018
  * Project: Cue system for Anosmia and Smart WheelChair
  * Website: 
  * 
@@ -44,18 +44,15 @@
  *      
  * Arduino MKR1000  |   LED (Green/ Red)
  * ---------------------------------------------
- *      D1          |   Positive of Green LED      
- *      D2          |   Positive of Red LED
- *      Gnd         |   Negative of both the LEDs
- * Arduino MKR1000  |   LED (Green/ Red)
- * ---------------------------------------------      
- *      D1          |   Positive of Green LED      
+ *      D0          |   Positive of Green LED      
+ *      D1          |   Positive of Red LED
+ *      Gnd         |   Negative of both the LEDs    
  * 
  * Blog Links 
  * ----------
  * 1. IoT Temperature Monitoring - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/07/28/cue-system-for-anosmia-and-smart-wheelchair-4-iot-temperature-monitoring-diy
  * 2. Fall and Collision Detection -  https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/16/cue-system-for-anosmia-and-smart-wheelchair-5-fall-and-collision-detection
- * 
+ * 3. Home Automation Control - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/09/05/cue-system-for-anosmia-and-smart-wheelchair-8b-home-appliance-control
  * 
  * Connecting Arduino MKR1000 with thinger.io, getting started guide - http://docs.thinger.io/arduino/
  * Create a new applet using IFTTT - https://ifttt.com/create
@@ -78,8 +75,8 @@ int keyIndex = 0;           /* Your network key Index number (needed only for WE
 /*GPIO pin assignments*/
 int tempSensor = A1;
 int XAxis = A3, YAxis = A2;
-int statusLED = 1;    /*Green LED for status*/
-int collisionLED = 0;/*Red LED to Alert user in case of collision*/
+int statusLED = 0;    /*Green LED for status*/
+int collisionLED = 1; /*Red LED to Alert user in case of collision*/
 int trigPinF = 5, trigPinR = 4;
 int echoPinF = 2, echoPinR = 3;
 
@@ -98,6 +95,7 @@ unsigned long previousMillis1 = 0;
 long tempFeedDelay = 5000;
 long collisionDelay = 100;
 long duration;
+int relayState = 0;
 
 int status = WL_IDLE_STATUS;
 /*Find instructions to obtain the below value here - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/16/cue-system-for-anosmia-and-smart-wheelchair-5-fall-and-collision-detection#jive_content_id_Obtaining_the_Webhook_URL_to_trigger_an_event_from_Arduino_MKR1000  */
@@ -123,6 +121,7 @@ void setup() {
 
   /*Serial Initialisation*/
   Serial.begin(38400);
+  Serial1.begin(38400);
 
   /*Connecting to Wi-Fi - Thinger.io*/
   Serial.println("Connecting to WiFi");
@@ -132,6 +131,12 @@ void setup() {
   
   thing["Temperature"] >> [](pson& out){
       out = temperatureInC();
+  };
+
+  /*The relay state is obtained as an input resource (integer/ number) from thinger.io*/
+  thing["RelayState"] << [](pson& in){
+      relayState = in["state"];
+      changeRelayState();
   };
 
   /*Connecting to Wi-Fi - IFTTT*/
@@ -167,10 +172,12 @@ void loop() {
   unsigned long currentMillis = millis();
   unsigned long currentMillis1 = millis();
 
-  if (currentMillis - previousMillis >= tempFeedDelay){
-    thing.handle();
+  /*if (currentMillis - previousMillis >= tempFeedDelay){
+    
     previousMillis = currentMillis;
-  }
+  }*/
+  thing.handle();
+  
   Serial.println(temperatureInC());
 
   XValue = analogRead(XAxis);
@@ -209,6 +216,7 @@ void loop() {
  * int calculateDistance(int trigPin, int echoPin)  - To calculate distance
  * void printWiFiStatus()                           - To print WiFi Status
  * void sendSMS()                                   - To send SMS 
+ * void changeRelayState()                          - To change the relay state on the basis of input received from thinger.io
  */
 
 float temperatureInC(){
@@ -221,17 +229,17 @@ float temperatureInC(){
 
 void detectFall (int X, int Y){
   /*Code to detect fall, The values below are assessed keeping the center position around the value 530 from X & Y axes*/
-  if ( X < 430 or X > 600 ){ XFlag = 1; }
+  if ( X < 430 or X > 650 ){ XFlag = 1; }
   else { XFlag = 2; }
 
-  if ( Y < 430 or Y > 600 ){ YFlag = 1; }
+  if ( Y < 430 or Y > 650 ){ YFlag = 1; }
   else { YFlag = 2; }
 
-  /* For Debugging purpose
+  /* For Debugging purpose */
   Serial.print(XFlag);Serial.print('\t');
   Serial.print(YFlag);Serial.print('\t');
   Serial.print(X);Serial.print('\t');
-  Serial.print(Y);Serial.print('\t');*/
+  Serial.print(Y);Serial.print('\t');
   
   if (XFlag == 1 or YFlag == 1) {
     fallCount = fallCount + 1;
@@ -310,5 +318,35 @@ void sendSMS(){
       client.stop();
       digitalWrite(statusLED, LOW);
     }
+  }
+}
+
+void changeRelayState(){
+  if(relayState == 1)
+  {
+    digitalWrite(statusLED, HIGH);
+    Serial1.print(1);
+  }
+  else if (relayState == 2){
+    digitalWrite(statusLED, LOW);
+    Serial1.print(2);
+  }
+  else if(relayState == 3)
+  {
+    digitalWrite(statusLED, HIGH);
+    Serial1.print(3);
+  }
+  else if (relayState == 4){
+    digitalWrite(statusLED, LOW);
+    Serial1.print(4);
+  }
+  else  if(relayState == 5)
+  {
+    digitalWrite(statusLED, HIGH);
+    Serial1.print(5);
+  }
+  else if (relayState == 6){
+    digitalWrite(statusLED, LOW);
+    Serial1.print(6);
   }
 }
