@@ -3,7 +3,8 @@
  * 
  * Design Challenge Page - https://www.element14.com/community/community/design-challenges/designforacause/blog
  *
- * Blog Link - 
+ * Blog Link - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/09/05/cue-system-for-anosmia-and-smart-wheelchair-8b-home-appliance-control
+ *             & https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/31/cue-system-for-anosmia-and-smart-wheelchair-6-home-appliance-control 
  * 
  * Author : Dixon Selvan
  * Date   : September 04, 2018
