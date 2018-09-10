@@ -10,15 +10,14 @@
  * Project: Cue system for Anosmia and Smart WheelChair
  * Website: 
  * 
- * Hardware components Required (Main Unit)
+ * Hardware components Required (Extra Unit)
  * ----------------------------------------
  * 1. Arduino UNO board
- * 2. Gas Sensors (MQ-2 & MQ-5)
- * 3. Four Channel Relay Module
- * 4. Bluetooth module
- * 5. ProtoShield/ Breadboard and Few Jumper wires
- * 6. 12V Power Adapter
- * 7. DC Fan
+ * 2. Four Channel Relay Module
+ * 3. Bluetooth module
+ * 4. ProtoShield/ Breadboard and Few Jumper wires
+ * 5. 12V Power Adapter
+ * 6. DC Fan
  * 
  * Connections
  * -----------
@@ -36,18 +35,10 @@
  *      Gnd         |         Gnd
  *      RX          |         RX     
  *      TX          |         TX
- * Arduino UNO      |   Gas Sensors(MQ-2/ MQ-5)
- * ---------------------------------------------
- *      5V          |         VCC
- *      Gnd         |         Gnd
- *      A0/ A1      |         A0     
- *      -           |         D0
  *      
  */
 
 /*Declaration and initialisation of Variables*/
-int mq2 = A0;
-int mq5 = A1;
 int Relay1 = 10;
 int Relay2 = 11;
 int Relay3 = 5;
@@ -56,8 +47,6 @@ int serialData = 0;
 
 void setup() {
   /*Assigning GPIO pin modes*/
-  pinMode(mq2, INPUT); 
-  pinMode(mq5, INPUT);
   pinMode(Relay1, OUTPUT);
   pinMode(Relay2, OUTPUT);
   pinMode(Relay3, OUTPUT);
@@ -67,7 +56,7 @@ void setup() {
   Serial.begin(38400);
 
   /*Setting the Relay Pin to LOW State*/
-  digitalWrite(Relay1, HIGH);
+  digitalWrite(Relay1, LOW);
   digitalWrite(Relay2, HIGH);
   digitalWrite(Relay3, HIGH);
   digitalWrite(Relay4, LOW);
@@ -75,24 +64,14 @@ void setup() {
 
 void loop() {
   /*Send the Sensor values to Master/ Serial Port*/
-  sendGasSensorValue();
   relayStateMonitor();
 }
 
-void sendGasSensorValue(){
-  /*Send data from gas sensors as comma separated values to Arduino MKR1000 Serially (BT)*/
-  Serial.print(analogRead(mq2));
-  Serial.print(',');
-  Serial.print(analogRead(mq5));
-  Serial.print(',');
-  Serial.println();
-}
-
 void relayStateMonitor (){
-  /*Listen to the master Arduino MKR1000 and turn ON or OFF the respective relay*/
+  /*Listen to the master Arduino MKR1000 and turn ON or OFF the respective relay; 1 from master will be received in ASCII as 49 in Slave*/
   if(Serial.available()>0){
      serialData = Serial.read();
-     Serial.println(serialData);
+     //Serial.println(serialData);
      if (serialData == 49){
       digitalWrite(Relay1, LOW);
      }
