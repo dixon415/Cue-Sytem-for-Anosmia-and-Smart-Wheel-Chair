@@ -293,7 +293,7 @@ void sendSMS(){
     Serial.println("connected to server");
     /*Make a HTTP request:
     Find instructions to obtain the below value here - https://www.element14.com/community/community/design-challenges/designforacause/blog/2018/08/16/cue-system-for-anosmia-and-smart-wheelchair-5-fall-and-collision-detection#jive_content_id_Obtaining_the_Webhook_URL_to_trigger_an_event_from_Arduino_MKR1000  */
-    client.println("GET /trigger/FallDetection/with/key/9DAktc7DOFMjcP7sS_4CP HTTP/1.1");
+    client.println("GET /trigger/{YOUR_IFTTT_EVENT_NAME}/with/key/{YOUR_KEY} HTTP/1.1");
     client.println("Host: maker.ifttt.com");
     
     client.println("Connection: close");
