@@ -20,7 +20,7 @@
  * 
  * Connections
  * -----------
- * Arduino UNO      |   Relay Module
+ * Relay Module     |   Arduino UNO
  * ---------------------------------------------
  *      5V          |         VCC
  *      Gnd         |         Gnd
