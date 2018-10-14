@@ -64,8 +64,8 @@ WiFiClient client;
 
 /*Declaring Variables*/
 int relayState = 0;
-int collisionLED = 1;     //Red LED to Alert user
-int statusLED = 0;        //Green LED for status
+int collisionLED = 0;     //Red LED to Alert user
+int statusLED = 1;        //Green LED for status
 
 /*Create an account in thinger.io and replace username below with that username. 
 Create a new device and replace deviceId, deviceCredential below with the one you had created.*/

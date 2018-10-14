@@ -104,7 +104,7 @@ char server[] = "maker.ifttt.com";
 WiFiClient client;
 
 /*ThingerWifi101 thing("username", "deviceId", "deviceCredential");*/
-ThingerWifi101 thing(SECRET_USERNAME, "ArduinoMKR1000", SECRET_DEVICECREDENTIAL);
+ThingerWifi101 thing(SECRET_USERNAME, SECRET_DEVICEID, SECRET_DEVICECREDENTIAL);
 
 /*************************************Setup*************************************/
 void setup() {
